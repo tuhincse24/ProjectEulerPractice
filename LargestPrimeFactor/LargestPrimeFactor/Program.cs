@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace LargestPrimeFactor
@@ -22,28 +23,31 @@ namespace LargestPrimeFactor
 
                 if (ok && toFactorise >= 2)
                 {
-                    StringBuilder factorList = new StringBuilder();
+                    StringBuilder factorListBuilder = new StringBuilder();
+                    var factorList = GetPrimeFactors(toFactorise, enumerator);
 
-                    foreach (long factor in GetPrimeFactors(toFactorise, enumerator))
+                    foreach (long factor in factorList)
                     {
-                        if (factorList.Length == 0)
-                            factorList.Append("Prime factor(s): ");
+                        if (factorListBuilder.Length == 0)
+                            factorListBuilder.Append("Prime factor(s): ");
                         else
-                            factorList.Append(", ");
-                        factorList.Append(factor);
+                            factorListBuilder.Append(", ");
+                        factorListBuilder.Append(factor);
                     }
+                    factorListBuilder.Append("\nLongest factor: ");
+                    factorListBuilder.Append(factorList?.OrderByDescending(t => t).FirstOrDefault());
 
-                    Console.WriteLine(factorList);
+                    Console.WriteLine(factorListBuilder);
                 }
             }
         }
 
 
-        private static IEnumerable<long> GetPrimeFactors(long value, Enumerator eratosthenes)
+        private static IEnumerable<long> GetPrimeFactors(long value, Enumerator enumerator)
         {
             List<long> factors = new List<long>();
 
-            foreach (long prime in eratosthenes)
+            foreach (long prime in enumerator)
             {
                 while (value % prime == 0)
                 {
